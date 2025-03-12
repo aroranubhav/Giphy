@@ -61,6 +61,9 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter)
 
+    //glide
+    implementation(libs.glide)
+
     //test
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
