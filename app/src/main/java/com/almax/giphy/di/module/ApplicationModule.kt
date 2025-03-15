@@ -2,11 +2,15 @@ package com.almax.giphy.di.module
 
 import android.app.Application
 import android.content.Context
+import androidx.room.Room
+import com.almax.giphy.data.local.GifsDao
+import com.almax.giphy.data.local.GifsDatabase
 import com.almax.giphy.data.remote.CacheInterceptor
 import com.almax.giphy.data.remote.ErrorInterceptor
 import com.almax.giphy.data.remote.NetworkService
 import com.almax.giphy.di.ApplicationContext
 import com.almax.giphy.di.BaseUrl
+import com.almax.giphy.util.Constants.GIFS_DB
 import com.almax.giphy.util.DefaultDispatcherProvider
 import com.almax.giphy.util.DispatcherProvider
 import dagger.Module
@@ -65,5 +69,18 @@ class ApplicationModule(
     @Provides //TODO: should this be singleton
     fun provideDefaultDispatcher(): DispatcherProvider {
         return DefaultDispatcherProvider()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGifsDao(): GifsDao {
+        return Room
+            .databaseBuilder(
+                application,
+                GifsDatabase::class.java,
+                GIFS_DB
+            )
+            .build()
+            .gifsDao()
     }
 }
