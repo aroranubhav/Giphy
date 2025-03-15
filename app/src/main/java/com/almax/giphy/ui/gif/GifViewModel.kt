@@ -2,7 +2,7 @@ package com.almax.giphy.ui.gif
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.almax.giphy.data.model.GifData
+import com.almax.giphy.data.local.GifEntity
 import com.almax.giphy.data.repository.GifRepository
 import com.almax.giphy.ui.base.UiState
 import com.almax.giphy.util.DispatcherProvider
@@ -17,8 +17,8 @@ class GifViewModel(
     private val dispatcher: DispatcherProvider
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<List<GifData>>>(UiState.Loading)
-    val uiState: StateFlow<UiState<List<GifData>>>
+    private val _uiState = MutableStateFlow<UiState<List<GifEntity>>>(UiState.Loading)
+    val uiState: StateFlow<UiState<List<GifEntity>>>
         get() = _uiState
 
     init {
@@ -35,6 +35,12 @@ class GifViewModel(
                 .collect { gifs ->
                     _uiState.value = UiState.Success(gifs)
                 }
+        }
+    }
+
+    fun updateGifEntityInDb(gifEntity: GifEntity, isSaved: Boolean) {
+        viewModelScope.launch(dispatcher.io) {
+            repository.updateGifEntityInDb(gifEntity, isSaved)
         }
     }
 }
