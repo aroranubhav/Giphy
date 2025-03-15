@@ -10,9 +10,10 @@ annotation class ApplicationContext
 @Qualifier
 @MustBeDocumented
 @Retention(AnnotationRetention.BINARY)
-annotation class ActivityContext
+annotation class FragmentContext
 
 @Qualifier
 @MustBeDocumented
 @Retention(AnnotationRetention.BINARY)
 annotation class BaseUrl
+

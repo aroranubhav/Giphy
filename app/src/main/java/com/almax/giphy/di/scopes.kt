@@ -5,4 +5,4 @@ import javax.inject.Scope
 @Scope
 @MustBeDocumented
 @Retention(AnnotationRetention.BINARY)
-annotation class ActivityScope
+annotation class FragmentScope

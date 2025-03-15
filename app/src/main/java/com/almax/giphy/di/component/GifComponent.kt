@@ -1,16 +1,16 @@
 package com.almax.giphy.di.component
 
-import com.almax.giphy.di.ActivityScope
+import com.almax.giphy.di.FragmentScope
 import com.almax.giphy.di.module.GifModule
-import com.almax.giphy.ui.gif.GifActivity
+import com.almax.giphy.ui.gif.GifFragment
 import dagger.Component
 
-@ActivityScope
+@FragmentScope
 @Component(
     dependencies = [ApplicationComponent::class],
     modules = [GifModule::class]
 )
 interface GifComponent {
 
-    fun inject(activity: GifActivity)
+    fun inject(fragment: GifFragment)
 }

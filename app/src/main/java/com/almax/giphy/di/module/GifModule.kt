@@ -1,10 +1,10 @@
 package com.almax.giphy.di.module
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.almax.giphy.data.repository.GifRepository
-import com.almax.giphy.di.ActivityContext
+import com.almax.giphy.di.FragmentContext
 import com.almax.giphy.ui.base.ViewModelProviderFactory
 import com.almax.giphy.ui.gif.GifAdapter
 import com.almax.giphy.ui.gif.GifViewModel
@@ -14,13 +14,14 @@ import dagger.Provides
 
 @Module
 class GifModule(
-    private val activity: AppCompatActivity
+    private val fragment: Fragment,
+    private val context: Context
 ) {
 
-    @ActivityContext
+    @FragmentContext
     @Provides
     fun provideContext(): Context =
-        activity
+        context
 
     @Provides
     fun provideGifViewModel(
@@ -28,7 +29,7 @@ class GifModule(
         dispatcher: DispatcherProvider
     ): GifViewModel {
         return ViewModelProvider(
-            activity,
+            fragment,
             ViewModelProviderFactory(GifViewModel::class) {
                 GifViewModel(repository, dispatcher)
             })[GifViewModel::class]
