@@ -2,6 +2,7 @@ package com.almax.giphy.ui.gif
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.almax.giphy.GifApplication
 import com.almax.giphy.databinding.FragmentGifBinding
@@ -61,9 +63,18 @@ class GifFragment : Fragment() {
     private fun setupUi() {
         binding.rvGif.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = this@GifFragment.adapter
             setHasFixedSize(true)
-            //TODO: set item decorator
+            addItemDecoration(
+                DividerItemDecoration(
+                    context,
+                    (layoutManager as LinearLayoutManager).orientation
+                )
+            )
+            adapter = this@GifFragment.adapter
+        }
+        adapter.itemSavedListener = { gifEntity, isSaved ->
+            Log.d(TAG, "setupUi: ${gifEntity.gif.url} :: $isSaved")
+            viewModel.updateGifEntityInDb(gifEntity, isSaved)
         }
         observeDataAndUpdateUi()
     }
@@ -72,7 +83,6 @@ class GifFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-
                     when (state) {
                         is UiState.Success -> {
                             updateProgressBarVisibility(false)
@@ -115,3 +125,5 @@ class GifFragment : Fragment() {
         component.inject(this@GifFragment)
     }
 }
+
+const val TAG = "GifFragmentTAG"
