@@ -63,6 +63,10 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter)
 
+    //room
+    implementation(libs.room)
+    ksp(libs.room.compiler)
+
     //glide
     implementation(libs.glide)
 
