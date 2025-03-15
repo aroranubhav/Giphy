@@ -9,6 +9,7 @@ import com.almax.giphy.R
 import com.almax.giphy.data.local.GifEntity
 import com.almax.giphy.databinding.ItemGifBinding
 import com.almax.giphy.util.GifItemSavedListener
+import com.almax.giphy.util.GifShareListener
 import com.almax.giphy.util.tint
 import com.bumptech.glide.Glide
 
@@ -17,6 +18,8 @@ class GifAdapter(
 ) : RecyclerView.Adapter<GifAdapter.GifViewHolder>() {
 
     lateinit var itemSavedListener: GifItemSavedListener<GifEntity>
+
+    lateinit var itemShareListener: GifShareListener<String>
 
     inner class GifViewHolder(private val binding: ItemGifBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -36,6 +39,9 @@ class GifAdapter(
                     gifEntity.savedTimeStamp = System.currentTimeMillis().toString()
                     updateDrawableTintColor(gifEntity.isSaved, binding.root.context, ivFav)
                     itemSavedListener(gifEntity, gifEntity.isSaved)
+                }
+                ivShare.setOnClickListener {
+                    itemShareListener(gifEntity.gif.url)
                 }
             }
         }

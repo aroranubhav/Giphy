@@ -1,8 +1,8 @@
 package com.almax.giphy.ui.gif
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +13,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.almax.giphy.GifApplication
+import com.almax.giphy.R
 import com.almax.giphy.databinding.FragmentGifBinding
 import com.almax.giphy.di.component.DaggerGifComponent
 import com.almax.giphy.di.component.GifComponent
 import com.almax.giphy.di.module.GifModule
 import com.almax.giphy.ui.base.UiState
+import com.almax.giphy.util.Constants.ROFL_EMOJI
+import com.almax.giphy.util.getEmoji
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -73,8 +76,10 @@ class GifFragment : Fragment() {
             adapter = this@GifFragment.adapter
         }
         adapter.itemSavedListener = { gifEntity, isSaved ->
-            Log.d(TAG, "setupUi: ${gifEntity.gif.url} :: $isSaved")
             viewModel.updateGifEntityInDb(gifEntity, isSaved)
+        }
+        adapter.itemShareListener = { url ->
+            shareGif(url)
         }
         observeDataAndUpdateUi()
     }
@@ -105,6 +110,22 @@ class GifFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun shareGif(url: String) {
+        val messageToShare = resources.getString(R.string.default_share_message) + " " +
+                getEmoji(ROFL_EMOJI) + "\n $url"
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT,
+                messageToShare
+            )
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 
     private fun updateProgressBarVisibility(state: Boolean) {
