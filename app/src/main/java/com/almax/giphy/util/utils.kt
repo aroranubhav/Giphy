@@ -12,3 +12,7 @@ fun ImageView.tint(context: Context, @ColorRes color: Int) {
         ContextCompat.getColor(context, color)
     )
 }
+
+fun getEmoji(unicode: Int): String {
+    return String(Character.toChars(unicode))
+}
