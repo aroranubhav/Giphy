@@ -1,6 +1,7 @@
 package com.almax.giphy.di.component
 
 import com.almax.giphy.GifApplication
+import com.almax.giphy.data.local.GifsDao
 import com.almax.giphy.data.remote.NetworkService
 import com.almax.giphy.di.module.ApplicationModule
 import com.almax.giphy.util.DispatcherProvider
@@ -16,6 +17,8 @@ interface ApplicationComponent {
     fun inject(application: GifApplication)
 
     fun getNetworkService(): NetworkService
+
+    fun getGifsDao(): GifsDao
 
     fun getDispatcherProvider(): DispatcherProvider
 }
