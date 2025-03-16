@@ -1,7 +1,6 @@
 package com.almax.giphy.ui.gif
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +20,7 @@ import com.almax.giphy.di.module.GifModule
 import com.almax.giphy.ui.base.UiState
 import com.almax.giphy.util.Constants.ROFL_EMOJI
 import com.almax.giphy.util.getEmoji
+import com.almax.giphy.util.updateVisibility
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -90,21 +90,21 @@ class GifFragment : Fragment() {
                 viewModel.uiState.collect { state ->
                     when (state) {
                         is UiState.Success -> {
-                            updateProgressBarVisibility(false)
                             adapter.setData(state.data)
+                            binding.pbGif.updateVisibility(false)
                         }
 
                         is UiState.Error -> {
-                            updateProgressBarVisibility(false)
                             Snackbar.make(
                                 binding.root,
                                 state.error,
                                 Snackbar.LENGTH_SHORT
                             ).show()
+                            binding.pbGif.updateVisibility(false)
                         }
 
                         is UiState.Loading -> {
-                            updateProgressBarVisibility(true)
+                            binding.pbGif.updateVisibility(true)
                         }
                     }
                 }
@@ -115,21 +115,9 @@ class GifFragment : Fragment() {
     private fun shareGif(url: String) {
         val messageToShare = resources.getString(R.string.default_share_message) + " " +
                 getEmoji(ROFL_EMOJI) + "\n $url"
-        val sendIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(
-                Intent.EXTRA_TEXT,
-                messageToShare
-            )
-            type = "text/plain"
+        context?.let {
+            com.almax.giphy.util.shareGif(it, messageToShare)
         }
-
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivity(shareIntent)
-    }
-
-    private fun updateProgressBarVisibility(state: Boolean) {
-        binding.pbGif.visibility = if (state) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {
