@@ -37,6 +37,9 @@ class GifModule(
 
     @Provides
     fun provideGifAdapter(): GifAdapter {
-        return GifAdapter(arrayListOf())
+        return GifAdapter(
+            fragment,
+            arrayListOf()
+        )
     }
 }
